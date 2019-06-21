@@ -35,6 +35,8 @@ gem 'twitter-bootstrap-rails'
 gem 'twitter-bootstrap-rails'
 
 gem 'faker'
+
+gem 'rest-client'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 

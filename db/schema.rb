@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_20_124749) do
+ActiveRecord::Schema.define(version: 2019_06_20_155057) do
 
   create_table "campaigns", force: :cascade do |t|
     t.date "start"
@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 2019_06_20_124749) do
   create_table "opening_hours", force: :cascade do |t|
     t.datetime "start_time"
     t.datetime "end_time"
-    t.date "day"
+    t.string "day"
     t.integer "pharmacy_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

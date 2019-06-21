@@ -1,31 +1,51 @@
 <%- model_class = Pharmacy -%>
-<div class="page-header">
+<div style="display: flex; justify-content: space-between; border-bottom: 2px solid black; align-items: center; margin-bottom: 20px;">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <div>
+    <%= link_to t('.back', :default => t("helpers.links.back")),
+                pharmacies_path, :class => 'btn btn-default'  %>
+    <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                  edit_pharmacy_path(@pharmacy), :class => 'btn btn-default' %>
+    <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                  pharmacy_path(@pharmacy),
+                  :method => 'delete',
+                  :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                  :class => 'btn btn-danger' %>
+  </div>
 </div>
-
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
-  <dd><%= @pharmacy.name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:street) %>:</strong></dt>
-  <dd><%= @pharmacy.street %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:zip) %>:</strong></dt>
-  <dd><%= @pharmacy.zip %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:city) %>:</strong></dt>
-  <dd><%= @pharmacy.city %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:phone) %>:</strong></dt>
-  <dd><%= @pharmacy.phone %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:fax) %>:</strong></dt>
-  <dd><%= @pharmacy.fax %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:email) %>:</strong></dt>
-  <dd><%= @pharmacy.email %></dd>
-</dl>
-
-<%= link_to t('.back', :default => t("helpers.links.back")),
-              pharmacies_path, :class => 'btn btn-default'  %>
-<%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_pharmacy_path(@pharmacy), :class => 'btn btn-default' %>
-<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              pharmacy_path(@pharmacy),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
+<div class="row">
+  <div class="col-md-4">
+    <dl class="dl-horizontal">
+      <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+      <dd><%= @pharmacy.name %></dd>
+      <dt><strong><%= model_class.human_attribute_name(:street) %>:</strong></dt>
+      <dd><%= @pharmacy.street %></dd>
+      <dt><strong><%= model_class.human_attribute_name(:zip) %>:</strong></dt>
+      <dd><%= @pharmacy.zip %></dd>
+      <dt><strong><%= model_class.human_attribute_name(:city) %>:</strong></dt>
+      <dd><%= @pharmacy.city %></dd>
+      <dt><strong><%= model_class.human_attribute_name(:phone) %>:</strong></dt>
+      <dd><%= @pharmacy.phone %></dd>
+      <dt><strong><%= model_class.human_attribute_name(:fax) %>:</strong></dt>
+      <dd><%= @pharmacy.fax %></dd>
+      <dt><strong><%= model_class.human_attribute_name(:email) %>:</strong></dt>
+      <dd><%= @pharmacy.email %></dd>
+    <%# </dl> %>
+    <%# <dl> %>
+      <dt><strong>Opening Hours</strong></dt>
+    <dt><% start_time = [2, 3, 4, 5].sample %></dt>
+    <dt><% end_time = [5, 6, 7, 8, 9, 10].sample %></dt>
+    <dt><% @pharmacy.opening_hours.each do |day| %></dt>
+      <dt><% if day.day == 'Sonntag' %></dt>
+        <dt><%= day.day %> geschlossen <br /></dt>
+      <dt><% elsif day.day == 'Samstag' %></dt>
+        <dt><%= day.day %> <%= day.start_time.hour - start_time + [0, 1, 2].sample %> - <%= day.end_time.hour + end_time - [1, 2, 3].sample %> Uhr<br /></dt>
+      <dt><% else %></dt>
+        <dt><%= day.day %> <%= day.start_time.hour - start_time %> - <%= day.end_time.hour + end_time %> Uhr<br /></dt>
+      <dt><% end %></dt>
+    <dt><% end %></dt>
+    </dl>
+  </div>
+  <div class="col-md-6 ml-auto">
+  </div>
+</div>
