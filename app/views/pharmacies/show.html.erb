@@ -1,11 +1,9 @@
 <%- model_class = Pharmacy -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h1><%= @pharmacy.name %></h1>
 </div>
 
 <dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
-  <dd><%= @pharmacy.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:street) %>:</strong></dt>
   <dd><%= @pharmacy.street %></dd>
   <dt><strong><%= model_class.human_attribute_name(:zip) %>:</strong></dt>
@@ -29,3 +27,53 @@
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
+
+<%= form_tag orders_path(pharmacy_id: @pharmacy.id, campaign_id: params[:campaign_id]), method: :post do %>
+  <div class="panel panel-default candidate-filter">
+    <div class="panel-heading">
+      <h3 class="panel-title"> Neue Bestellung </h3>
+    </div>
+    <div class="panel-body">
+      <div class="form-group">
+        <%= collection_select(nil, :campaign_id, @campaigns, :id, :name, { selected: params[:campaign_id] }) %>
+      </div>
+      <fieldset class="form-group row">
+      </fieldset>
+    </div>
+
+    <div class="panel-footer">
+      <%= submit_tag 'Erstellen', class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>
+
+<h2>Bestellungen:</h2>
+  <% @orders.each do |order| %>
+  <h3><%= order.campaign.name %></h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th> Product </th>
+        <th> Quantity </th>
+        <th> Preis pro Einheit </th>
+        <th> Gesamtpreis </th>
+        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% order.order_items.each do |order_item| %>
+        <tr>
+          <td><%= order_item.product.name %></td>
+          <td><%= order_item.quantity %>
+            <%= form_tag order_item_path(order_item_id: order_item.id, quantity: params[:quantity]), method: :patch do %>
+                <%= select(nil, :quantity, [*1..100], { selected: params[:quantity] }) %>
+                <%= submit_tag 'Update', class: 'btn btn-success' %>
+            <% end %>
+          </td>
+          <td><%= order_item.product.price %></td>
+          <td><%= order_item.product.price * order_item.quantity %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
