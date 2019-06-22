@@ -1,51 +1,153 @@
-<%- model_class = Pharmacy -%>
-<div style="display: flex; justify-content: space-between; border-bottom: 2px solid black; align-items: center; margin-bottom: 20px;">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
-  <div>
-    <%= link_to t('.back', :default => t("helpers.links.back")),
-                pharmacies_path, :class => 'btn btn-default'  %>
-    <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                  edit_pharmacy_path(@pharmacy), :class => 'btn btn-default' %>
-    <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                  pharmacy_path(@pharmacy),
-                  :method => 'delete',
-                  :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                  :class => 'btn btn-danger' %>
+<div class="container">
+  <%- model_class = Pharmacy -%>
+  <div style="display: flex; justify-content: space-between; border-bottom: 2px solid black; align-items: center; margin-bottom: 20px;">
+    <h1><%= @pharmacy.name %></h1>
+    <div>
+      <%= link_to t('.back', :default => t("helpers.links.back")),
+                  pharmacies_path, :class => 'btn btn-default'  %>
+      <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                    edit_pharmacy_path(@pharmacy), :class => 'btn btn-default' %>
+      <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                    pharmacy_path(@pharmacy),
+                    :method => 'delete',
+                    :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                    :class => 'btn btn-danger' %>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-md-4">
-    <dl class="dl-horizontal">
-      <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
-      <dd><%= @pharmacy.name %></dd>
-      <dt><strong><%= model_class.human_attribute_name(:street) %>:</strong></dt>
-      <dd><%= @pharmacy.street %></dd>
-      <dt><strong><%= model_class.human_attribute_name(:zip) %>:</strong></dt>
-      <dd><%= @pharmacy.zip %></dd>
-      <dt><strong><%= model_class.human_attribute_name(:city) %>:</strong></dt>
-      <dd><%= @pharmacy.city %></dd>
-      <dt><strong><%= model_class.human_attribute_name(:phone) %>:</strong></dt>
-      <dd><%= @pharmacy.phone %></dd>
-      <dt><strong><%= model_class.human_attribute_name(:fax) %>:</strong></dt>
-      <dd><%= @pharmacy.fax %></dd>
-      <dt><strong><%= model_class.human_attribute_name(:email) %>:</strong></dt>
-      <dd><%= @pharmacy.email %></dd>
-    <%# </dl> %>
-    <%# <dl> %>
-      <dt><strong>Opening Hours</strong></dt>
-    <dt><% start_time = [2, 3, 4, 5].sample %></dt>
-    <dt><% end_time = [5, 6, 7, 8, 9, 10].sample %></dt>
-    <dt><% @pharmacy.opening_hours.each do |day| %></dt>
-      <dt><% if day.day == 'Sonntag' %></dt>
-        <dt><%= day.day %> geschlossen <br /></dt>
-      <dt><% elsif day.day == 'Samstag' %></dt>
-        <dt><%= day.day %> <%= day.start_time.hour - start_time + [0, 1, 2].sample %> - <%= day.end_time.hour + end_time - [1, 2, 3].sample %> Uhr<br /></dt>
-      <dt><% else %></dt>
-        <dt><%= day.day %> <%= day.start_time.hour - start_time %> - <%= day.end_time.hour + end_time %> Uhr<br /></dt>
-      <dt><% end %></dt>
-    <dt><% end %></dt>
-    </dl>
-  </div>
-  <div class="col-md-6 ml-auto">
+  <div class="row">
+    <div class="col-sm-12 col-md-4">
+      <div class="col-sm-6 col-md-12">
+        <h3>Allgemeines</h3>
+        <strong><%= model_class.human_attribute_name(:name) %>:</strong>
+        <%= @pharmacy.name %><br />
+        <strong><%= model_class.human_attribute_name(:street) %>:</strong>
+        <%= @pharmacy.street %><br />
+        <strong><%= model_class.human_attribute_name(:zip) %>:</strong>
+        <%= @pharmacy.zip %><br />
+        <strong><%= model_class.human_attribute_name(:city) %>:</strong>
+        <%= @pharmacy.city %><br />
+        <strong><%= model_class.human_attribute_name(:phone) %>:</strong>
+        <%= @pharmacy.phone %><br />
+        <strong><%= model_class.human_attribute_name(:fax) %>:</strong>
+        <%= @pharmacy.fax %><br />
+        <strong><%= model_class.human_attribute_name(:email) %>:</strong>
+        <%= @pharmacy.email %><br /><br />
+      </div>
+      <div class="col-sm-6 col-md-12">
+        <h3>Opening Hours</h3>
+        <% start_time = [2, 3, 4, 5].sample %>
+        <% end_time = [5, 6, 7, 8, 9, 10].sample %>
+        <% @pharmacy.opening_hours.each do |day| %>
+          <% if day.day == 'Sonntag' %>
+            <div style="display: flex; align-items: center;"><div style="width: 100px;"><%= day.day %></div> <strong>geschlossen<strong><br /></div>
+          <% elsif day.day == 'Samstag' %>
+            <div style="display: flex; align-items: center;"><div style="width: 100px;"><%= day.day %></div> <%= day.start_time.hour - start_time + [0, 1, 2].sample %> - <%= day.end_time.hour + end_time - [1, 2, 3].sample %>Uhr<br /></div>
+          <% else %>
+            <div style="display: flex; align-items: center;"><div style="width: 100px;"><%= day.day %></div> <%= day.start_time.hour - start_time %> - <%= day.end_time.hour + end_time %>Uhr<br /></div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-8">
+      <h3>Bestellübersicht</h3>
+        <% @orders.each do |order| %>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+            <%= order.campaign.name %>
+            <%= order.due_date %>
+            <%= order.delivered %>
+            </div>
+            <div class="panel-body">
+              <% order.campaign.products.each do |product| %>
+                <% if product.order_items.first.quantity != 0 %>
+                  <div style="display: flex; justify-content: space-between;">
+                    <p style="width: 100px;"><%= product.name %></p>
+                    <p style="width: 250px;"><%= product.description %></p>
+                    <p><%= product.price %> EUR</p>
+                    <p><%= product.order_items.first.quantity %></p>
+                    <p style="width: 90px;"><%= (product.order_items.first.quantity * product.price).round(2) %> EUR</p>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+        +
+      </button>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="col-12">
+              <%= form_tag orders_path(pharmacy_id: @pharmacy.id, campaign_id: params[:campaign_id]), method: :post do %>
+                <div class="panel panel-default candidate-filter">
+                  <div class="panel-heading">
+                    <h3 class="panel-title"> Neue Bestellung </h3>
+                  </div>
+                  <div class="panel-body">
+                    <div class="form-group">
+                      <%= collection_select(nil, :campaign_id, @campaigns, :id, :name, { selected: params[:campaign_id] }) %>
+                    </div>
+                    <fieldset class="form-group row">
+                    </fieldset>
+                  </div>
+
+                  <div class="panel-footer">
+                    <%= submit_tag 'Erstellen', class: 'btn btn-success' %>
+                  </div>
+                </div>
+              <% end %>
+
+              <% @orders.each do |order| %>
+                <h3><%= order.campaign.name %></h3>
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th> Product </th>
+                      <th> Quantity </th>
+                      <th> Preis pro Einheit </th>
+                      <th> Gebindepreis </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% order.order_items.each do |order_item| %>
+                      <tr>
+                        <td><%= order_item.product.name %></td>
+                        <td><%= order_item.quantity %>
+                        <%= number_field_tag(name: 'quantity', value: order_item.quantity) %>
+                          <%= form_tag order_item_path(order_item_id: order_item.id, quantity: params[:quantity]), method: :patch do %>
+                              <%= select(nil, :quantity, [*1..100], { selected: params[:quantity] }) %>
+                              <%= submit_tag 'Update', class: 'btn btn-success' %>
+                          <% end %>
+                        </td>
+                        <td><%= order_item.product.price %></td>
+                        <td><%= order_item.product.price * order_item.quantity %></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+                <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                            order_path(order_id: order.id, pharmacy_id: @pharmacy.id),
+                            :method => 'delete',
+                            :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                            :class => 'btn btn-danger' %>
+              <% end %>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

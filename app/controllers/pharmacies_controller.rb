@@ -10,7 +10,8 @@ class PharmaciesController < ApplicationController
   # GET /pharmacies/1
   # GET /pharmacies/1.json
   def show
-    # opening_hours = @pharmacy.opening_hours
+    @orders = @pharmacy.orders
+    @campaigns = Campaign.all
   end
 
   # GET /pharmacies/new
