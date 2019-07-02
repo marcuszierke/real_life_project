@@ -1,6 +1,6 @@
 <div class="container">
   <%- model_class = Pharmacy -%>
-  <div style="display: flex; justify-content: space-between; border-bottom: 2px solid black; align-items: center; margin-bottom: 20px;">
+  <div class="container-style">
     <h1><%= @pharmacy.name %></h1>
     <div>
       <%= link_to t('.back', :default => t("helpers.links.back")),
@@ -16,42 +16,50 @@
   </div>
   <div class="row">
     <div class="col-sm-12 col-md-4">
-      <div class="col-sm-6 col-md-12">
-        <h3>Allgemeines</h3>
-        <strong><%= model_class.human_attribute_name(:name) %>:</strong>
-        <%= @pharmacy.name %><br />
-        <strong><%= model_class.human_attribute_name(:street) %>:</strong>
-        <%= @pharmacy.street %><br />
-        <strong><%= model_class.human_attribute_name(:zip) %>:</strong>
-        <%= @pharmacy.zip %><br />
-        <strong><%= model_class.human_attribute_name(:city) %>:</strong>
-        <%= @pharmacy.city %><br />
-        <strong><%= model_class.human_attribute_name(:phone) %>:</strong>
-        <%= @pharmacy.phone %><br />
-        <strong><%= model_class.human_attribute_name(:fax) %>:</strong>
-        <%= @pharmacy.fax %><br />
-        <strong><%= model_class.human_attribute_name(:email) %>:</strong>
-        <%= @pharmacy.email %><br /><br />
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          Allgemeine Informationen
+        </div>
+        <div class="panel-body">
+          <strong><%= model_class.human_attribute_name(:name) %>:</strong>
+          <%= @pharmacy.name %><br />
+          <strong><%= model_class.human_attribute_name(:street) %>:</strong>
+          <%= @pharmacy.street %><br />
+          <strong><%= model_class.human_attribute_name(:zip) %>:</strong>
+          <%= @pharmacy.zip %><br />
+          <strong><%= model_class.human_attribute_name(:city) %>:</strong>
+          <%= @pharmacy.city %><br />
+          <strong><%= model_class.human_attribute_name(:phone) %>:</strong>
+          <%= @pharmacy.phone %><br />
+          <strong><%= model_class.human_attribute_name(:fax) %>:</strong>
+          <%= @pharmacy.fax %><br />
+          <strong><%= model_class.human_attribute_name(:email) %>:</strong>
+          <%= @pharmacy.email %><br /><br />
+        </div>
       </div>
-      <div class="col-sm-6 col-md-12">
-        <h3>Opening Hours</h3>
-        <% start_time = [2, 3, 4, 5].sample %>
-        <% end_time = [5, 6, 7, 8, 9, 10].sample %>
-        <% @pharmacy.opening_hours.each do |day| %>
-          <% if day.day == 'Sonntag' %>
-            <div style="display: flex; align-items: center;"><div style="width: 100px;"><%= day.day %></div> <strong>geschlossen<strong><br /></div>
-          <% elsif day.day == 'Samstag' %>
-            <div style="display: flex; align-items: center;"><div style="width: 100px;"><%= day.day %></div> <%= day.start_time.hour - start_time + [0, 1, 2].sample %> - <%= day.end_time.hour + end_time - [1, 2, 3].sample %>Uhr<br /></div>
-          <% else %>
-            <div style="display: flex; align-items: center;"><div style="width: 100px;"><%= day.day %></div> <%= day.start_time.hour - start_time %> - <%= day.end_time.hour + end_time %>Uhr<br /></div>
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          Opening Hours
+        </div>
+        <div class="panel-body">
+          <% start_time = [2, 3, 4, 5].sample %>
+          <% end_time = [5, 6, 7, 8, 9, 10].sample %>
+          <% @pharmacy.opening_hours.each do |day| %>
+            <% if day.day == 'Sonntag' %>
+              <div style="display: flex; align-items: center;"><div style="width: 100px;"><%= day.day %></div> <strong>geschlossen<strong><br /></div>
+            <% elsif day.day == 'Samstag' %>
+              <div style="display: flex; align-items: center;"><div style="width: 100px;"><%= day.day %></div> <%= day.start_time.hour - start_time + [0, 1, 2].sample %> - <%= day.end_time.hour + end_time - [1, 2, 3].sample %>Uhr<br /></div>
+            <% else %>
+              <div style="display: flex; align-items: center;"><div style="width: 100px;"><%= day.day %></div> <%= day.start_time.hour - start_time %> - <%= day.end_time.hour + end_time %>Uhr<br /></div>
+            <% end %>
           <% end %>
-        <% end %>
+        </div>
       </div>
     </div>
     <div class="col-sm-12 col-md-8">
       <h3>Bestellübersicht</h3>
         <% @orders.each do |order| %>
-          <div class="panel panel-default">
+          <div class="panel panel-info">
             <div class="panel-heading">
             <%= order.campaign.name %>
             <%= order.due_date %>
@@ -73,7 +81,7 @@
           </div>
         <% end %>
       <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+      <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter">
         +
       </button>
     </div>
@@ -89,7 +97,7 @@
           <div class="modal-body">
             <div class="col-12">
               <%= form_tag orders_path(pharmacy_id: @pharmacy.id, campaign_id: params[:campaign_id]), method: :post do %>
-                <div class="panel panel-default candidate-filter">
+                <div class="panel panel-success candidate-filter">
                   <div class="panel-heading">
                     <h3 class="panel-title"> Neue Bestellung </h3>
                   </div>
@@ -97,17 +105,14 @@
                     <div class="form-group">
                       <%= collection_select(nil, :campaign_id, @campaigns, :id, :name, { selected: params[:campaign_id] }) %>
                     </div>
-                    <fieldset class="form-group row">
-                    </fieldset>
                   </div>
-
                   <div class="panel-footer">
                     <%= submit_tag 'Erstellen', class: 'btn btn-success' %>
                   </div>
                 </div>
               <% end %>
-
               <% @orders.each do |order| %>
+              <div  class="campaign-order-overview">
                 <h3><%= order.campaign.name %></h3>
                 <table class="table table-striped">
                   <thead>
@@ -123,9 +128,8 @@
                       <tr>
                         <td><%= order_item.product.name %></td>
                         <td><%= order_item.quantity %>
-                        <%= number_field_tag(name: 'quantity', value: order_item.quantity) %>
                           <%= form_tag order_item_path(order_item_id: order_item.id, quantity: params[:quantity]), method: :patch do %>
-                              <%= select(nil, :quantity, [*1..100], { selected: params[:quantity] }) %>
+                              <%= select(nil, :quantity, [*1..20], { selected: params[:quantity] }) %>
                               <%= submit_tag 'Update', class: 'btn btn-success' %>
                           <% end %>
                         </td>
@@ -140,11 +144,12 @@
                             :method => 'delete',
                             :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                             :class => 'btn btn-danger' %>
+                </div>
               <% end %>
-            </div>
+              </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>

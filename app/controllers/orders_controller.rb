@@ -24,4 +24,4 @@ class OrdersController < ApplicationController
   def set_order
     @order = Order.find(params[:order_id])
   end
-end
+end 

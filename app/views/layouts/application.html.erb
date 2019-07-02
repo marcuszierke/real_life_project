@@ -8,6 +8,12 @@
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
+    <%= nav_bar fixed: :top, brand: "Pharmacy Campaign Manager", responsive: true do %>
+    <%= menu_group do %>
+        <%= menu_item "Campaigns", campaigns_path %>
+        <%= menu_item "Pharmacies", root_path %>
+    <% end %>
+<% end %>
   <body>
     <%= yield %>
   </body>
